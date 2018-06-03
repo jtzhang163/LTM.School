@@ -35,8 +35,8 @@ namespace LTM.School.EntityFramework.Data
       context.SaveChanges();
 
       var courses = new Course[] {
-        new Course{ CourseId = 10010, Title = "政治",  Credits = 6 },
-        new Course{ CourseId = 10011, Title = "历史",  Credits = 4 },
+        new Course{ Id = 10010, Title = "政治",  Credits = 6 },
+        new Course{ Id = 10011, Title = "历史",  Credits = 4 },
       };
 
       foreach (var course in courses)
@@ -47,7 +47,7 @@ namespace LTM.School.EntityFramework.Data
 
       var enrollments = new Enrollment[] {
         new Enrollment{  StudentId =1, CourseId = 10010, Grade = CourseGrade.A },
-        new Enrollment{  StudentId =2, CourseId = 10011, Grade = CourseGrade.B },
+        new Enrollment{  StudentId =2, CourseId = 10011 },
       };
 
       foreach (var enrollment in enrollments)

@@ -8,7 +8,7 @@ namespace LTM.School.Core.Models
 {
     public class Course
     {
-        public int CourseId { get; set; }
+        public int Id { get; set; }
 
         public string Title { get; set; }
         /// <summary>

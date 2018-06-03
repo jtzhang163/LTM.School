@@ -23,9 +23,8 @@ namespace LTM.School.EntityFramework
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<Student>().ToTable("Student");
-      modelBuilder.Entity<Course>().ToTable("Course").Property(c => c.CourseId).ValueGeneratedNever();
-      modelBuilder.Entity<Enrollment>().ToTable("Enrollment").HasOne(e => e.Student).WithMany(s => s.Enrollments);
-      modelBuilder.Entity<Enrollment>().HasOne(e=>e.Course).WithMany(c=>c.Enrollments);
+      modelBuilder.Entity<Course>().ToTable("Course").Property(c => c.Id).ValueGeneratedNever();
+      modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
     }
   }
 }
