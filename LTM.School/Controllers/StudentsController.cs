@@ -54,15 +54,25 @@ namespace LTM.School.Controllers
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,RealName,EnrollmnetDate")] Student student)
+    public async Task<IActionResult> Create([Bind("RealName,EnrollmnetDate")] Student student)
     {
-      if (ModelState.IsValid)
+
+      try
       {
-        _context.Add(student);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        if (ModelState.IsValid)
+        {
+          _context.Add(student);
+          await _context.SaveChangesAsync();
+          //return View(student);
+          return RedirectToAction(nameof(Index));
+        }
+     
       }
-      return View(student);
+      catch (DbUpdateException e)
+      {
+        ModelState.AddModelError(e.Message,"无法进行数据的保存，请检查数据是否正常！");
+      }
+      return View(student);  
     }
 
     // GET: Students/Edit/5
