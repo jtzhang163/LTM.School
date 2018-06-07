@@ -20,9 +20,23 @@ namespace LTM.School.Controllers
     }
 
     // GET: Students
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string sortOrder)
     {
-      return View(await _context.Students.AsNoTracking().ToListAsync());
+      ViewData["Name_Sort_Parm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+      ViewData["Date_Sort_Parm"] = sortOrder == "date" ? "date_desc" : "date";
+
+      var dtos = await _context.Students.AsNoTracking().ToListAsync();
+      var students = from student in _context.Students select student;
+      
+      switch (sortOrder)
+      {
+        case "name_desc": students = students.OrderByDescending(s => s.RealName); break;
+        case "date": students = students.OrderBy(s => s.EnrollmnetDate); break;
+        case "date_desc": students = students.OrderByDescending(s => s.EnrollmnetDate); break;
+        default: students = students.OrderBy(s => s.RealName); break;
+      }
+      dtos = await students.ToListAsync();
+      return View(dtos);
     }
 
     // GET: Students/Details/5
