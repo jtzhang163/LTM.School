@@ -20,13 +20,20 @@ namespace LTM.School.Controllers
     }
 
     // GET: Students
-    public async Task<IActionResult> Index(string sortOrder)
+    public async Task<IActionResult> Index(string sortOrder,string search)
     {
       ViewData["Name_Sort_Parm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
       ViewData["Date_Sort_Parm"] = sortOrder == "date" ? "date_desc" : "date";
 
-      var dtos = await _context.Students.AsNoTracking().ToListAsync();
+      ViewData["Search_Parm"] = search;
+
+     // var dtos = await _context.Students.AsNoTracking().ToListAsync();
       var students = from student in _context.Students select student;
+
+      if (!string.IsNullOrWhiteSpace(search))
+      {
+        students = students.Where(s => s.RealName.Contains(search));//模糊查询
+      }
       
       switch (sortOrder)
       {
@@ -35,7 +42,7 @@ namespace LTM.School.Controllers
         case "date_desc": students = students.OrderByDescending(s => s.EnrollmnetDate); break;
         default: students = students.OrderBy(s => s.RealName); break;
       }
-      dtos = await students.ToListAsync();
+      var dtos = await students.ToListAsync();
       return View(dtos);
     }
 
