@@ -13,7 +13,7 @@
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            姓名：<input type="text" name="search" value="@ViewData["Search_Parm"]"/>
+            姓名：<input type="text" name="search" value="@ViewData["Search_Parm"]" />
             <input type="submit" value="搜索" class="btn btn-default">
             <a asp-action="Index">显示所有</a>
         </p>
@@ -23,30 +23,47 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["Name_Sort_Parm"]">@Html.DisplayNameFor(model => model.RealName)</a>                  
-                </th>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["Date_Sort_Parm"]">@Html.DisplayNameFor(model => model.EnrollmnetDate)</a>                  
-                </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["Name_Sort_Parm"]">@Html.DisplayNameFor(model => model.RealName)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["Date_Sort_Parm"]">@Html.DisplayNameFor(model => model.EnrollmnetDate)</a>
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RealName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EnrollmnetDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">编辑</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">详情</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RealName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrollmnetDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">编辑</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">详情</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<a class="btn btn-default @ViewData["HasPreviousPage"]" asp-action="Index" asp-route-search="@ViewData["Search_Parm"]" asp-route-page="@(Convert.ToInt32(ViewData["Page"]) - 1)">上一页</a>
+
+@for (int i = 0; i < Convert.ToInt32(ViewData["TotalPages"]); i++)
+{
+    if (i + 1 == Convert.ToInt32(ViewData["Page"]))
+    {
+<span>@(i + 1)</span>
+    }
+    else
+    {
+        <a asp-action="Index" asp-route-search="@ViewData["Search_Parm"]" asp-route-page="@(i + 1)">@(i + 1)</a>
+    }
+}
+@*@(i + 1 == Convert.ToInt32(ViewData["Page"]) ? "disabled" : "")*@
+<a class="btn btn-default @ViewData["HasNextPage"]" asp-action="Index" asp-route-search="@ViewData["Search_Parm"]" asp-route-page="@(Convert.ToInt32(ViewData["Page"]) + 1)">下一页</a>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTM.School.Core.Models;
 using LTM.School.EntityFramework;
+using LTM.School.Common;
 
 namespace LTM.School.Controllers
 {
@@ -20,7 +21,7 @@ namespace LTM.School.Controllers
     }
 
     // GET: Students
-    public async Task<IActionResult> Index(string sortOrder,string search)
+    public async Task<IActionResult> Index(string sortOrder,string search, int? page)
     {
       ViewData["Name_Sort_Parm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
       ViewData["Date_Sort_Parm"] = sortOrder == "date" ? "date_desc" : "date";
@@ -30,9 +31,11 @@ namespace LTM.School.Controllers
      // var dtos = await _context.Students.AsNoTracking().ToListAsync();
       var students = from student in _context.Students select student;
 
+
       if (!string.IsNullOrWhiteSpace(search))
       {
         students = students.Where(s => s.RealName.Contains(search));//模糊查询
+       // page = 1;
       }
       
       switch (sortOrder)
@@ -42,7 +45,14 @@ namespace LTM.School.Controllers
         case "date_desc": students = students.OrderByDescending(s => s.EnrollmnetDate); break;
         default: students = students.OrderBy(s => s.RealName); break;
       }
-      var dtos = await students.ToListAsync();
+
+      int pageSize = 3;
+      var dtos = await PaginatedList<Student>.CreateAsync(students, page ?? 1, pageSize); //await students.ToListAsync();
+
+      ViewData["Page"] = page ?? 1;
+      ViewData["HasPreviousPage"] = dtos.HasPreviousPage ? "" : "disabled";
+      ViewData["HasNextPage"] = dtos.HasNextPage ? "" : "disabled";
+      ViewData["TotalPages"] = dtos.TotalPages;
       return View(dtos);
     }
 
