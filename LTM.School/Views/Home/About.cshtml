@@ -1,7 +1,30 @@
-﻿@{
-    ViewData["Title"] = "About";
+﻿@model IEnumerable<LTM.School.ViewModels.EnrollmentDateGroup>
+
+@{
+    ViewData["Title"] = "关于我们";
 }
+
 <h2>@ViewData["Title"]</h2>
+
 <h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.EnrollmentDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Count)</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.EnrollmentDate</td>
+            <td>@item.Count</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
