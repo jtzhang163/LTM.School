@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LTM.School.Core.Models
 {
+    /// <summary>
+    /// 课程
+    /// </summary>
     public class Course
     {
         public int Id { get; set; }

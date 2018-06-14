@@ -12,9 +12,10 @@ using System;
 namespace LTM.School.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180614154020_Add_Migration_Student_MaxSecret")]
+    partial class Add_Migration_Student_MaxSecret
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +63,6 @@ namespace LTM.School.Migrations
                     b.Property<DateTime>("EnrollmnetDate");
 
                     b.Property<string>("RealName")
-                        .IsRequired()
                         .HasMaxLength(8);
 
                     b.Property<string>("Secret")
