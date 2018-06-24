@@ -17,6 +17,7 @@ namespace LTM.School.Core.Models
 
 
     [StringLength(50, MinimumLength = 2)]
+    [Display(Name = "名称")]
     public string Name { get; set; }
 
     /// <summary>

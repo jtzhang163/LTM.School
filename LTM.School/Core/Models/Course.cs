@@ -12,15 +12,17 @@ namespace LTM.School.Core.Models
   /// </summary>
   public class Course
   {
-    [Display(Name = "Number")]
+    [Display(Name = "课程编号")]
     public int Id { get; set; }
 
     [StringLength(50, MinimumLength = 2)]
+    [Display(Name = "名称")]
     public string Title { get; set; }
     /// <summary>
     /// 学分
     /// </summary>
     [Range(0,5)]
+    [Display(Name = "学分")]
     public int Credits { get; set; }
 
     /// <summary>
@@ -28,6 +30,7 @@ namespace LTM.School.Core.Models
     /// </summary>
     public int DepartmentId { get; set; }
 
+    [Display(Name = "部门")]
     public Department Department { get; set; }
 
     public ICollection<Enrollment> Enrollments { get; set; }
