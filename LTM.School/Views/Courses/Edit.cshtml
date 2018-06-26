@@ -1,12 +1,12 @@
 ﻿@model LTM.School.Core.Models.Course
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "编辑";
 }
 
-<h2>Edit</h2>
+<h2>编辑</h2>
 
-<h4>Course</h4>
+<h4>课程</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,19 +24,19 @@
                 <span asp-validation-for="Credits" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
+                <label asp-for="Department" class="control-label"></label>
                 <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
                 <span asp-validation-for="DepartmentId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="保存" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">返回列表</a>
 </div>
 
 @section Scripts {
