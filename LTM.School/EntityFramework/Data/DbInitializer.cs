@@ -60,10 +60,10 @@ namespace LTM.School.EntityFramework.Data
 
       var departments = new Department[]
       {
-        new Department{ Name = "声乐", Budget = 350000, StartDate = DateTime.Parse("2013-09-04") },
-        new Department{ Name = "杂技", Budget = 350000, StartDate = DateTime.Parse("2014-09-04") },
-        new Department{ Name = "学说", Budget = 350000, StartDate = DateTime.Parse("2015-09-04") },
-        new Department{ Name = "兵法", Budget = 350000, StartDate = DateTime.Parse("2016-09-04") }
+        new Department{ Name = "声乐", Budget = 350000, StartDate = DateTime.Parse("2013-09-04"),  InstructorId = instructors.Single(i=>i.RealName == "墨子").Id},
+        new Department{ Name = "杂技", Budget = 350000, StartDate = DateTime.Parse("2014-09-04") , InstructorId = instructors.Single(i=>i.RealName == "孔子").Id},
+        new Department{ Name = "学说", Budget = 350000, StartDate = DateTime.Parse("2015-09-04") , InstructorId = instructors.Single(i=>i.RealName == "庄子").Id},
+        new Department{ Name = "兵法", Budget = 350000, StartDate = DateTime.Parse("2016-09-04"), InstructorId = instructors.Single(i=>i.RealName == "荀子").Id }
       };
 
       foreach (var d in departments)

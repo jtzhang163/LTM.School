@@ -34,9 +34,13 @@ namespace LTM.School.Controllers
         return NotFound();
       }
 
-      var department = await _context.Departments
-          .Include(d => d.Administrator)
-          .SingleOrDefaultAsync(m => m.Id == id);
+      //var department = await _context.Departments
+      //    .Include(d => d.Administrator)
+      //    .SingleOrDefaultAsync(m => m.Id == id);
+
+      var department = await _context.Departments.FromSql("select * from Department WHERE Id = {0}", id)
+        .Include(d => d.Administrator)
+        .SingleOrDefaultAsync();
       if (department == null)
       {
         return NotFound();
