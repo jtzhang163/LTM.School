@@ -7,15 +7,15 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
 namespace LTM.School.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180628063412_AddRowVersionToDepartment")]
+    partial class AddRowVersionToDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,6 +99,20 @@ namespace LTM.School.Migrations
                     b.ToTable("Enrollment");
                 });
 
+            modelBuilder.Entity("LTM.School.Core.Models.Instructor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("HireDate");
+
+                    b.Property<string>("RealName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Instructor");
+                });
+
             modelBuilder.Entity("LTM.School.Core.Models.OfficeAssignment", b =>
                 {
                     b.Property<int>("InstructorId");
@@ -111,48 +125,23 @@ namespace LTM.School.Migrations
                     b.ToTable("OfficeAssignment");
                 });
 
-            modelBuilder.Entity("LTM.School.Core.Models.Person", b =>
+            modelBuilder.Entity("LTM.School.Core.Models.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
+                    b.Property<DateTime>("EnrollmnetDate");
 
                     b.Property<string>("RealName")
                         .IsRequired()
                         .HasMaxLength(8);
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Persons");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
-                });
-
-            modelBuilder.Entity("LTM.School.Core.Models.Instructor", b =>
-                {
-                    b.HasBaseType("LTM.School.Core.Models.Person");
-
-                    b.Property<DateTime>("HireDate");
-
-                    b.ToTable("Instructor");
-
-                    b.HasDiscriminator().HasValue("Instructor");
-                });
-
-            modelBuilder.Entity("LTM.School.Core.Models.Student", b =>
-                {
-                    b.HasBaseType("LTM.School.Core.Models.Person");
-
-                    b.Property<DateTime>("EnrollmnetDate");
-
                     b.Property<string>("Secret")
                         .HasMaxLength(200);
 
-                    b.ToTable("Student");
+                    b.HasKey("Id");
 
-                    b.HasDiscriminator().HasValue("Student");
+                    b.ToTable("Student");
                 });
 
             modelBuilder.Entity("LTM.School.Core.Models.Course", b =>

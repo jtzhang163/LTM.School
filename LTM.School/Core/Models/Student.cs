@@ -10,14 +10,8 @@ namespace LTM.School.Core.Models
   /// <summary>
   /// 学生
   /// </summary>
-  public class Student
+  public class Student : Person
   {
-    public int Id { get; set; }
-
-    [Required]
-    [DisplayName("姓名")]
-    [StringLength(8,ErrorMessage = "输入名字过长")]
-    public string RealName { get; set; }
 
     [DisplayName("注册时间")]
     [DataType(DataType.Date)]

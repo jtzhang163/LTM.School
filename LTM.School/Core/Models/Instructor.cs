@@ -9,12 +9,8 @@ namespace LTM.School.Core.Models
   /// <summary>
   /// 老师
   /// </summary>
-  public class Instructor
+  public class Instructor : Person
   {
-    public int Id { get; set; }
-
-    [Display(Name = "姓名")]
-    public string RealName { get; set; }
 
     [Display(Name = "入职日期")]
     [DataType(DataType.Date)]

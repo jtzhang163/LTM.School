@@ -46,7 +46,7 @@ namespace LTM.School.Controllers
         default: students = students.OrderBy(s => s.RealName); break;
       }
 
-      int pageSize = 3;
+      int pageSize = 10;
       var dtos = await PaginatedList<Student>.CreateAsync(students, page ?? 1, pageSize); //await students.ToListAsync();
 
       ViewData["Page"] = page ?? 1;

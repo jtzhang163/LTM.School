@@ -43,7 +43,7 @@ namespace LTM.School.Controllers
 
       }
 
-      if(courseid != null)
+      if (courseid != null)
       {
         ViewData["CourseId"] = courseid.Value;
 
@@ -102,7 +102,7 @@ namespace LTM.School.Controllers
         return NotFound();
       }
 
-      var instructor = await _context.Instructors.SingleOrDefaultAsync(m => m.Id == id);
+      var instructor = await _context.Instructors.Include(a => a.OfficeAssignment).SingleOrDefaultAsync(m => m.Id == id);
       if (instructor == null)
       {
         return NotFound();
@@ -113,9 +113,9 @@ namespace LTM.School.Controllers
     // POST: Instructors/Edit/5
     // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+    [HttpPost, ActionName("Edit")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,RealName,HireDate")] Instructor instructor)
+    public async Task<IActionResult> EditPost(int id, [Bind("Id,RealName,HireDate,OfficeAssignment")] Instructor instructor)
     {
       if (id != instructor.Id)
       {
@@ -127,6 +127,14 @@ namespace LTM.School.Controllers
         try
         {
           _context.Update(instructor);
+          if (!_context.OfficeAssignments.Select(a => a.InstructorId).Contains(instructor.Id))
+          {
+            _context.OfficeAssignments.Add(instructor.OfficeAssignment);
+          }
+          else
+          {
+            _context.Update(instructor.OfficeAssignment);
+          }
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -170,6 +178,10 @@ namespace LTM.School.Controllers
     {
       var instructor = await _context.Instructors.SingleOrDefaultAsync(m => m.Id == id);
       _context.Instructors.Remove(instructor);
+
+      var departments = await _context.Departments.Where(a => a.InstructorId == id).ToListAsync();
+      departments.ForEach(d=>d.InstructorId = null);
+
       await _context.SaveChangesAsync();
       return RedirectToAction(nameof(Index));
     }
