@@ -104,28 +104,66 @@ namespace LTM.School.Controllers
 
       var department = await _context.Departments.Include(a => a.Administrator).SingleOrDefaultAsync(a => a.Id == id);
 
-      if(department == null)
+      if (department == null)
       {
         //ModelState.AddModelError("","该部门信息已被其他人删除！");
-        return NotFound();
+        //return NotFound();
+        var deletedDepartment = new Department();
+
+        await TryUpdateModelAsync(deletedDepartment);
+
+        ModelState.AddModelError(string.Empty, "无法进行数据的修改。该部门信息已经被其他人所删除！");
+        ViewBag.InstructorId =
+            new SelectList(_context.Instructors, "Id", "RealName", deletedDepartment.InstructorId);
+        return View(deletedDepartment);
       }
 
       _context.Entry(department).Property("RowVersion").OriginalValue = rowVersion;
 
-      if(await TryUpdateModelAsync<Department>(department))
+      if (await TryUpdateModelAsync<Department>(department, "", a => a.Name, a => a.StartDate, a => a.Budget, a => a.InstructorId))
       {
         try
         {
           await _context.SaveChangesAsync();
           return RedirectToAction(nameof(Index));
         }
-        catch (DbUpdateException ex)
+        catch (DbUpdateException ex)//rowVersion不一致，说明被改
         {
+          var exceptionEntity = ex.Entries.Single();
+          var clientValue = (Department)exceptionEntity.Entity;
+          var databaseEntity = exceptionEntity.GetDatabaseValues();
+          if (databaseEntity == null)
+          {
+            ModelState.AddModelError(string.Empty, "无法进行数据的修改。该部门信息已经被其他人所删除！");
+          }
+          else
+          {
 
-          throw;
+            var databaseValues = (Department)databaseEntity.ToObject();
+            if (databaseValues.Name != clientValue.Name)
+              ModelState.AddModelError("Name", $"当前值:{databaseValues.Name}");
+            if (databaseValues.Budget != clientValue.Budget)
+              ModelState.AddModelError("Budget", $"当前值:{databaseValues.Budget}");
+            if (databaseValues.StartDate != clientValue.StartDate)
+              ModelState.AddModelError("StartDate", $"当前值:{databaseValues.StartDate}");
+            if (databaseValues.InstructorId != clientValue.InstructorId)
+            {
+              var instructorEntity =
+                  await _context.Instructors.SingleOrDefaultAsync(
+                      a => a.Id == databaseValues.InstructorId);
+
+              ModelState.AddModelError("InstructorId", $"当前值:{instructorEntity?.RealName}");
+            }
+
+            ModelState.AddModelError("", "你正在编辑的记录已经被其他用户所修改，编辑操作已经被取消，数据库当前的值已经显示在页面上。请再次点击保存。否则请返回列表。");
+
+            department.RowVersion = databaseValues.RowVersion;
+            ModelState.Remove("RowVersion");
+          }
         }
       }
-
+      ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "RealName", department.InstructorId);
+      return View(department);
       //if (id != department.Id)
       //{
       //    return NotFound();
@@ -151,8 +189,6 @@ namespace LTM.School.Controllers
       //    }
       //    return RedirectToAction(nameof(Index));
       //}
-      //ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "Id", department.InstructorId);
-      return View(department);
     }
 
     // GET: Departments/Delete/5
