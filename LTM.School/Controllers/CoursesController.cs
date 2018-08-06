@@ -156,5 +156,24 @@ namespace LTM.School.Controllers
     {
       return _context.Courses.Any(e => e.Id == id);
     }
+
+
+    public IActionResult UpdateCredits()
+    {
+      return View();
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateCredits(int? credit)
+    {
+      if(credit != null)
+      {
+        ViewData["UpdateRows"] = "受影响的行："+ await _context.Database.ExecuteSqlCommandAsync(@"UPDATE Course SET Credits = {0}", credit);
+      }
+      return View();
+    }
+
   }
 }
